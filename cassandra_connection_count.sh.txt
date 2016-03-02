@@ -1,0 +1,9 @@
+#!/bin/sh
+# Script to capture connection count on the thrift interface
+export SLEEP_TIME=5
+
+while true
+do
+   echo "[`date +"%m/%d/%Y:%T"`] --- `netstat -an | grep :9160 | awk '{print $6}' | sort | uniq -c | xargs`" >> /opt/app/connection.log
+   sleep $SLEEP_TIME
+done
