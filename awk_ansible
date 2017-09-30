@@ -1,0 +1,6 @@
+Lets say if you have hundreds of Hadoop nodes or cassandra servers and you need to know how many servers are reaching a disk threshold:
+
+ansible hadoop -i inventory.txt -m shell -a "df -h | grep data | awk '0+\$5 > 65 {print}'"
+
+
+Ref: https://unix.stackexchange.com/questions/15075/only-display-df-lines-that-have-more-fs-usage-than-80
