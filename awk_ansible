@@ -4,3 +4,7 @@ ansible hadoop -i inventory.txt -m shell -a "df -h | grep data | awk '0+\$5 > 65
 
 
 Ref: https://unix.stackexchange.com/questions/15075/only-display-df-lines-that-have-more-fs-usage-than-80
+
+
+Lets say you want to compute the total storage used by a table in Cassandra on a large cluster:
+ansible cassandra -i cassandra.inv -m shell -a "for i in 1 2 3 4 5 6; do echo ---data\$i---; du -cks /data\$i/data/cassandra/EVENT_TABLE;done | grep total | awk '{sum +=\$1} END{print sum/1024/1024}'"
