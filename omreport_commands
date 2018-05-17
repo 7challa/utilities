@@ -1,0 +1,5 @@
+# Check pdisk
+omreport storage pdisk controller=0|egrep "^ID |Status|State|Failure"
+
+# Check vdisk
+omreport storage vdisk|egrep "^Name|State|Status|Write|Read"
