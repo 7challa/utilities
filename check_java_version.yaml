@@ -1,0 +1,25 @@
+---
+ - hosts: all
+   serial: 1
+   any_errors_fatal: true
+   gather_facts: false
+   sudo: yes
+
+   tasks:
+
+     - name: Grep java
+       shell: ps -ef | grep java | grep CassandraDaemon | grep {{ JAVA_VERSION_TO_CHECK }} | grep -v "grep {{ JAVA_VERSION_TO_CHECK }}"
+       ignore_errors: true
+       register: grep_output
+
+# Uncomment the below to troubleshoot
+#     - debug: 
+#         var: grep_output
+
+     - debug: 
+         msg: "Server {{ inventory_hostname }} Java is upgraded"
+       when: grep_output.stdout.find('jdk1.8.0_131') != -1
+
+     - debug: 
+         msg: "Server {{ inventory_hostname }} Java is NOT upgraded"
+       when: grep_output.stdout.find('jdk1.8.0_131') == -1
