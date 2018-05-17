@@ -1,3 +1,7 @@
+# The pupose of this playbook is to check if the cassandra process is running with the java version as specified by the key in the inventory file 
+# Ensure you have the below key in the inventory file
+# JAVA_VERSION_TO_CHECK=jdk1.8.0_131
+
 ---
  - hosts: all
    serial: 1
