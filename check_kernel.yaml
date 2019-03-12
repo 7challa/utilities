@@ -1,0 +1,26 @@
+#Run this ansible play book against a list of hosts to check if KERNEL_VERSION mathces whats on the server
+#Requires the variable either in the inventory file or passed as -e "KERNEL_VERSION"
+
+---
+ - hosts: all
+   serial: 1
+   any_errors_fatal: true
+   gather_facts: false
+
+   tasks:
+
+     - name: Gather kernel version
+       shell: /bin/uname -r
+       ignore_errors: true
+       register: kernel_output
+
+     - debug:
+         msg: "Kernel version is {{ kernel_output.stdout }}"
+
+     - debug: 
+         msg: "Kernel on server {{ inventory_hostname }} is upgraded"
+       when: kernel_output.stdout.find('{{ KERNEL_VERSION }}') != -1
+
+     - debug: 
+         msg: "Kernel on server {{ inventory_hostname }} is NOT upgraded"
+       when: kernel_output.stdout.find('{{ KERNEL_VERSION }}') == -1
