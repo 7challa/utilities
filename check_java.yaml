@@ -1,0 +1,33 @@
+---
+ - hosts: all
+   serial: 1
+   any_errors_fatal: true
+   gather_facts: false
+
+   tasks:
+
+     - name: Grep cassandra java
+       shell: ps -ef | grep java | grep CassandraDaemon | grep {{ JAVA_VERSION_TO_CHECK }} | grep -v "grep {{ JAVA_VERSION_TO_CHECK }}"
+       ignore_errors: true
+       register: grep_output
+
+     - debug: 
+         msg: "Java for Cassandra on server {{ inventory_hostname }} is upgraded"
+       when: grep_output.stdout.find('{{ JAVA_VERSION_TO_CHECK }}') != -1
+
+     - debug: 
+         msg: "Java for Cassandra on server {{ inventory_hostname }} is NOT upgraded"
+       when: grep_output.stdout.find('{{ JAVA_VERSION_TO_CHECK }}') == -1
+
+     - name: Grep OpsCenter java
+       shell: ps -ef | grep java | grep datastax-agent-5.2.1-standalone.jar | grep {{ JAVA_VERSION_TO_CHECK }} | grep -v "grep {{ JAVA_VERSION_TO_CHECK }}"
+       ignore_errors: true
+       register: opscenter_grep_output
+
+     - debug: 
+         msg: "Java for OpsCenter on server {{ inventory_hostname }} is upgraded"
+       when: opscenter_grep_output.stdout.find('{{ JAVA_VERSION_TO_CHECK }}') != -1
+
+     - debug: 
+         msg: "Java for OpsCenter on server {{ inventory_hostname }} is NOT upgraded"
+       when: opscenter_grep_output.stdout.find('{{ JAVA_VERSION_TO_CHECK }}') == -1
