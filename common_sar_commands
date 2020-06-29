@@ -1,0 +1,16 @@
+# To check the open-files on the system 
+sar -v (This gives the current day info)
+sar -v -f /var/log/sa/sa28  (This gives the info for the 28th day of the current month)
+
+
+#To check how the CPU load was on the system
+sar -p
+
+
+# To check how the disks were performing
+sar -d
+Note: If await on the output shows a high number - repeat the command several times to ensure it is the disk that is causing the issue
+
+
+# Report I/O and transfer rate statistics
+sar -b 
