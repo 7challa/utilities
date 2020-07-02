@@ -14,3 +14,8 @@ Note: If await on the output shows a high number - repeat the command several ti
 
 # Report I/O and transfer rate statistics
 sar -b 
+
+
+# Report load avergage 
+sar -q
+Note: Check for ldavg-1/ldavg-5/ldavg-15/blocked
