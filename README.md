@@ -1,2 +1,2 @@
-**This repository contains general utilities mostly related to Linux/Java**
+**This repository contains general utilities/common how to's etc., **
 
