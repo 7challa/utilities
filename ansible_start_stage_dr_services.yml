@@ -1,0 +1,55 @@
+- hosts: all
+  gather_facts: false
+  any_errors_fatal: True
+
+  vars:
+   - command: start
+  
+  tasks:
+      block:
+        - name: Start AWS EC2 Instances
+          local_action: shell ./aws_sandbox_status.py {{ inventory_hostname_short }} {{ command }}     
+
+        - name: Wait for connection
+          wait_for_connection:
+                  delay: 5
+                  sleep: 2
+                  timeout: 10
+
+        - pause:
+            minutes: 7
+
+        - name: Restart CM Agent
+          systemd:
+            state: restarted
+            name: cloudera-scm-agent
+          notify:
+            - Start Yarn
+            - Start Hive
+            - Start Impala
+
+      rescue:
+        - name: Sending an e-mail
+          mail:
+            host: <relay_host>
+            from: <from_email>
+            to: <to_email>
+            subject: ERROR Starting AWS Instances 
+            body: There was an ERROR Starting AWS Instances. Please check 
+          run_once: true
+          delegate_to: localhost
+
+      always:
+      # This executes for all the instances in the inventory
+        - debug:
+            msg: "This message always prints"
+
+      handlers:
+      - name: Start Hive
+        local_action: command python restartHive.py
+  
+      - name: Start Yarn
+        local_action: command python restartYarn.py
+  
+      - name: Start Impala
+        local_action: command python restartImpala.py
