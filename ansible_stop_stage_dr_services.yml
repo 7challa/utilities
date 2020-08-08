@@ -1,0 +1,19 @@
+- hosts: all
+  gather_facts: false
+  any_errors_fatal: True
+
+  vars:
+   - command: stop
+  
+  tasks:
+    - name: Stop Hive
+      local_action: command python stopHive.py
+    
+    - name: Stop Yarn
+      local_action: command python stopYarn.py
+
+    - name: Stop Impala
+      local_action: command python stopImpala.py
+
+    - name: Stop AWS Instances
+      local_action: shell ./aws_sandbox_status.py {{ inventory_hostname_short }} {{ command }}
